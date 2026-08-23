@@ -1,0 +1,18 @@
+# Archived console log of the original Section 6 run (2026-07/08).
+# It was produced before the code was merged into this replication package,
+# so the command line it echoes names the old script/output names:
+#     run_exp123.R  ->  run_extension.R
+#     exp1_r300.rds ->  results/Sec6_continuous_raw.rds
+#     exp2_r300.rds ->  results/Sec6_discrete_raw.rds
+# The numbers below are the ones behind the archived .rds files.
+# ---------------------------------------------------------------------------
+﻿Rscript : There were 17 warnings (use warnings() to see them)
+At line:1 char:531
++ ... :EXP=$e; $env:OUT="$($e)_r300.rds"; Rscript run_exp123.R *>&1 | Out-F ...
++                                         ~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (There were 17 w...() to see them):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+exp2: 5 mechanisms x 300 reps = 1500 jobs | arms: identity, poisson, nbinom, empirical, tpsc
+elapsed 31.5 min | rows 7500 / 7500 | arm failures 0
+saved: exp2_r300.rds 

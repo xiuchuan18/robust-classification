@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the software and the paper below."
+title: "robust-classification: replication package for RoLLR and S-RoLLR"
+abstract: >-
+  R and Rcpp implementation of the RoLLR and S-RoLLR classifiers, which model
+  each class-conditional feature marginal with the two-piece scale-Cauchy (TPSC)
+  family, transform features by the fitted log-likelihood ratio, and classify
+  with L1-penalized logistic regression. Includes the full simulation study,
+  three real-data case studies, the stage-1 estimation lab, and the
+  working-distribution extension experiments reported in the manuscript.
+type: software
+license: MIT
+authors:
+  - family-names: Liu
+    given-names: Xiuchuan
+    affiliation: "University of South Carolina"
+    email: xiuchuan.liu18@gmail.com
+  - family-names: Huang
+    given-names: Xianzheng
+    affiliation: "University of South Carolina"
+keywords:
+  - robust classification
+  - feature selection
+  - heavy-tailed distribution
+  - likelihood ratio
+  - logistic regression
+  - LASSO
+preferred-citation:
+  type: article
+  title: "Robust Classification with Feature Selection Using Non-Gaussian Data"
+  authors:
+    - family-names: Liu
+      given-names: Xiuchuan
+    - family-names: Huang
+      given-names: Xianzheng
+  year: 2026

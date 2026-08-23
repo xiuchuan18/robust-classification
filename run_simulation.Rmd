@@ -1,0 +1,92 @@
+---
+title: "Simulation study (RoLLR / S-RoLLR)"
+output: html_document
+---
+
+Twelve data-generating mechanisms (Section 4).
+
+```{r setup, include=FALSE}
+source(here::here("R", "00_setup.R"))
+```
+
+```{r run}
+# Cases 1-8 and 10-12 share the base setting (n = 800, p = 30, |I| = 20). Case 9
+# is the small-sample high-dimensional heavy-tail setting (n = 300, p = 700, so
+# p > n) that showcases S-RoLLR's small-sample robustness.
+grid <- rbind(
+  expand.grid(scenario = setdiff(ALL_SCENARIOS, "Case9: HighDim HeavyTail"),
+              n = 800, p = 30, p_relevant = 20, stringsAsFactors = FALSE),
+  data.frame(scenario = "Case9: HighDim HeavyTail",
+             n = 300, p = 700, p_relevant = 20, stringsAsFactors = FALSE)
+)
+n_reps    <- 300
+base_seed <- 1031
+
+jobs <- do.call(rbind, lapply(seq_len(nrow(grid)), function(i)
+  data.frame(grid[i, ], rep = seq_len(n_reps),
+             seed = base_seed + (i - 1) * n_reps + seq_len(n_reps))))
+
+FORCE_RERUN <- FALSE
+
+RESULT_FILE <- here::here("results", "simulation_results.rds")
+dir.create(dirname(RESULT_FILE), showWarnings = FALSE)
+
+if (!FORCE_RERUN && file.exists(RESULT_FILE)) {
+
+results <- readRDS(RESULT_FILE)
+
+} else {
+
+cl <- makeCluster(max(1, detectCores() - 1)); registerDoParallel(cl)
+
+cpp_exports <- c("d_tpsc_cpp", "tpsc_nll_cpp", "tpsc_transform_cpp",
+                 "tpsc_rowloglik_cpp")
+
+results <- foreach(k = seq_len(nrow(jobs)), .combine = "rbind",
+                   .packages = c("Rcpp","glmnet","e1071","randomForest",
+                                 "lightgbm","mclust","pROC","MASS","Matrix"),
+                   .noexport = cpp_exports,
+                   .errorhandling = "pass") %dopar% {
+  source(here::here("R", "00_setup.R"))
+  j <- jobs[k, ]; set.seed(j$seed)
+  d <- generate_data(j$scenario, j$n, j$p, j$p_relevant)
+  X <- d$X; colnames(X) <- paste0("V", seq_len(ncol(X)))
+  sig <- paste0("V", seq_len(d$n_signal))            # true informative features
+  idx <- sample(nrow(X), floor(0.7 * nrow(X)))
+  out <- run_all_models(X[idx, ], d$y[idx], X[-idx, ], d$y[-idx],
+                        signal_names = sig, tune = TRUE)
+  cbind(scenario = j$scenario, repetition = j$rep, out)
+}
+
+stopCluster(cl); registerDoSEQ()
+saveRDS(results, RESULT_FILE)
+
+}
+```
+
+```{r summarise}
+# Order the rows by Case number. ALL_SCENARIOS is already in natural order, so it doubles as the factor-level order for both tables.
+results <- results %>%
+  mutate(scenario = factor(scenario, levels = ALL_SCENARIOS),
+         model    = factor(model,    levels = MODEL_ORDER))
+
+# Classification performance + timing
+perf <- results %>%
+  group_by(scenario, model) %>%
+  summarise(auc = mean(auc, na.rm = TRUE), acc = mean(acc, na.rm = TRUE),
+            f1 = mean(f1, na.rm = TRUE),
+            median_seconds = median(seconds, na.rm = TRUE), .groups = "drop")
+print(perf, n = Inf)
+
+# Selection accuracy (only L1-RL and S-RoLLR do intrinsic selection)
+selection <- results %>%
+  filter(model %in% c("S-RoLLR", "L1-RL")) %>%
+  group_by(scenario, model) %>%
+  summarise(mean_n_selected = mean(n_selected, na.rm = TRUE),
+            TPR = mean(sel_tpr, na.rm = TRUE),
+            FPR = mean(sel_fpr, na.rm = TRUE),
+            sel_F1 = mean(sel_f1, na.rm = TRUE), .groups = "drop")
+print(selection, n = Inf)
+```
+
+Note on interpretation: SVM, RF, LightGBM, GMM-NB, MOKE and RoLLR do not perform intrinsic hard variable selection, so selection TPR/FPR are reported only for the two L1-based methods. Timing is reported for all.

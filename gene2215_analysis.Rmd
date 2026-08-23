@@ -1,0 +1,124 @@
+---
+title: "Why gene 2215 is unique to S-RoLLR: a distributional analysis (supplement Appendix E, Figure E.2)"
+output: html_document
+---
+
+This companion analysis explains why **gene 2215** is selected frequently by S-RoLLR yet overlooked by L1-RL, random forest and LightGBM.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+source(here::here("R", "00_setup.R"))
+library(ggplot2); library(pROC); library(MASS); library(gridExtra)
+```
+
+```{r compute}
+data(prostate, package = "spls")
+Xall <- prostate$x; colnames(Xall) <- paste0("gene_", seq_len(ncol(Xall)))
+y   <- as.factor(prostate$y)
+cls <- ifelse(y == levels(y)[1], 0L, 1L)          # 0 = nontumor, 1 = tumor
+g   <- as.numeric(Xall[, "gene_2215"]); x0 <- g[cls == 0]; x1 <- g[cls == 1]; n <- length(g)
+
+kmode <- function(z) { d <- density(z); d$x[which.max(d$y)] }
+AUC   <- function(s) { a <- as.numeric(auc(roc(cls, s, quiet = TRUE))); max(a, 1 - a) }
+
+# distributional summary
+mean_diff <- abs(mean(x0) - mean(x1)); mode_diff <- abs(kmode(x0) - kmode(x1))
+var_ratio <- var(x1) / var(x0); f_p <- var.test(x0, x1)$p.value
+
+# five univariate classifiers: in-sample and leave-one-out CV AUC
+Xm <- matrix(g, ncol = 1); df <- data.frame(cls = cls, g = g)
+
+p0 <- fit_tpsc_mle(x0); p1 <- fit_tpsc_mle(x1)
+Tfull <- log(pmax(d_tpsc(g, p1[1], p1[2], p1[3], p1[4]), 1e-100)) -
+         log(pmax(d_tpsc(g, p0[1], p0[2], p0[3], p0[4]), 1e-100))
+is_AUC <- c(
+  `Linear LR`    = AUC(predict(glm(cls ~ g, family = binomial), type = "response")),
+  `LDA`          = AUC(predict(lda(Xm, cls), Xm)$posterior[, 2]),
+  `QDA`          = AUC(predict(qda(Xm, cls), Xm)$posterior[, 2]),
+  `Quadratic LR` = AUC(predict(glm(cls ~ g + I(g^2), family = binomial), type = "response")),
+  `S-RoLLR`      = AUC(Tfull))
+
+# leave-one-out CV
+llr <- lq <- lT <- numeric(n)
+for (i in 1:n) {
+  tr <- df[-i, ]; te <- df[i, , drop = FALSE]
+  llr[i] <- predict(glm(cls ~ g,          family = binomial, data = tr), newdata = te, type = "response")
+  lq[i]  <- predict(glm(cls ~ g + I(g^2), family = binomial, data = tr), newdata = te, type = "response")
+  a <- fit_tpsc_mle(tr$g[tr$cls == 0]); b <- fit_tpsc_mle(tr$g[tr$cls == 1])
+  lT[i]  <- log(max(d_tpsc(g[i], b[1], b[2], b[3], b[4]), 1e-100)) -
+            log(max(d_tpsc(g[i], a[1], a[2], a[3], a[4]), 1e-100))
+}
+cv_AUC <- c(
+  `Linear LR`    = AUC(llr),
+  `LDA`          = AUC(lda(Xm, cls, CV = TRUE)$posterior[, 2]),
+  `QDA`          = AUC(qda(Xm, cls, CV = TRUE)$posterior[, 2]),
+  `Quadratic LR` = AUC(lq),
+  `S-RoLLR`      = AUC(lT))
+
+# formal test that the quadratic term is needed
+lr_p <- anova(glm(cls ~ g, family = binomial),
+              glm(cls ~ g + I(g^2), family = binomial), test = "LRT")$`Pr(>Chi)`[2]
+```
+
+```{r summary-table}
+knitr::kable(
+  data.frame(Classifier = names(cv_AUC),
+             `In-sample AUC` = round(is_AUC, 3),
+             `LOO-CV AUC`    = round(cv_AUC, 3), check.names = FALSE),
+  row.names = FALSE,
+  caption = "Single-feature (gene 2215) discrimination. In-sample optimism is small and uniform, so the ranking is honest under leave-one-out CV.")
+```
+
+### Figure: the signal is distributional and higher-order
+```{r figure, fig.width=11.5, fig.height=4.8}
+lab <- function(v) ifelse(v == 0, "Class 0", "Class 1")
+base_t <- theme_classic(base_size = 13) +
+  theme(legend.position = "top", legend.title = element_blank(),
+        legend.text  = element_text(size = 12),
+        legend.key.size = unit(1.0, "lines"),
+        axis.title = element_text(size = 13),
+        axis.text  = element_text(size = 12, colour = "black"))
+
+## (a) class-conditional densities + modes
+hist_df <- data.frame(x = g, Class = lab(cls))
+kde <- do.call(rbind, lapply(c(0, 1), function(k) {
+  d <- density(g[cls == k]); data.frame(x = d$x, y = d$y, Class = lab(k)) }))
+modes <- data.frame(Class = c("Class 0", "Class 1"), m = c(kmode(x0), kmode(x1)))
+pa <- ggplot() +
+  geom_histogram(data = hist_df, aes(x, after_stat(density), fill = Class),
+                 bins = 30, alpha = 0.45, position = "identity", colour = NA) +
+  geom_line(data = kde, aes(x, y, linetype = Class), linewidth = 0.8) +
+  geom_vline(data = modes, aes(xintercept = m, linetype = Class),
+             colour = "grey30", linewidth = 0.4, show.legend = FALSE) +
+  scale_fill_manual(values = c("Class 0" = "grey75", "Class 1" = "grey35")) +
+  scale_linetype_manual(values = c("Class 0" = "solid", "Class 1" = "dashed")) +
+  labs(x = "Gene 2215 expression", y = "Density") + base_t
+
+## (b) discriminant-complexity ladder (LOO-CV AUC)
+meth <- c("Linear LR\n(x)", "LDA", "QDA", "Quadratic LR\n(x, x^2)", "S-RoLLR\n(TPSC LLR)")
+tier <- c("mean (linear)", "mean (linear)",
+          "+ variance (quadratic)", "+ variance (quadratic)",
+          "+ shape (density ratio)")
+bdf <- data.frame(Method = factor(meth, levels = meth),
+                  AUC = as.numeric(cv_AUC),
+                  Tier = factor(tier, levels = c("mean (linear)",
+                        "+ variance (quadratic)", "+ shape (density ratio)")))
+pb <- ggplot(bdf, aes(Method, AUC, fill = Tier)) +
+  geom_col(width = 0.72, colour = "black", linewidth = 0.3) +
+  geom_hline(yintercept = 0.5, linetype = "dotted", colour = "grey50") +
+  geom_text(aes(label = sprintf("%.2f", AUC)), vjust = -0.5, size = 4.2) +
+  scale_fill_manual(values = c("mean (linear)" = "grey82",
+                               "+ variance (quadratic)" = "grey55",
+                               "+ shape (density ratio)" = "grey25")) +
+  coord_cartesian(ylim = c(0.5, 0.92)) +
+  labs(x = NULL, y = "Leave-one-out CV AUC (gene 2215 alone)") +
+  base_t +
+  theme(legend.text = element_text(size = 10.5),
+        legend.key.size = unit(0.85, "lines"),
+        legend.spacing.x = unit(0.25, "lines"))
+
+fig <- arrangeGrob(pa, pb, ncol = 2)
+ggsave("figure_gene2215.pdf", fig, width = 11.5, height = 4.8)
+grid::grid.draw(fig)
+```
+

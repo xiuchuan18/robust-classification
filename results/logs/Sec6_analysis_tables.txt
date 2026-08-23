@@ -1,0 +1,309 @@
+﻿
+==========================================================================
+MANUSCRIPT TABLE 5  [Sec6_continuous_raw.rds]  (n=800 p=100 |I|=20 reps=300, rows=12600, failures=0)
+
+-- CLASSIFICATION: AUC --
+    L1-RL Gaussian Student-t skew-normal skew-t   TPSC mixture (BIC)
+C1 0.9494   0.9478    0.9465      0.9415 0.9406 0.9406        0.9469
+C2 0.8940   0.8918    0.8834      0.9416 0.9398 0.9399        0.9130
+C3 0.8749   0.7922    0.9607      0.9100 0.9816 0.9816        0.9383
+C4 0.5110   0.5268    0.7802      0.9141 0.9592 0.9606        0.9226
+C5 0.5065   0.5263    0.5256      0.9922 0.9917 0.9939        1.0000
+C6 0.6523   0.5298    0.8891      0.5324 0.8711 0.8765        0.8877
+
+-- CLASSIFICATION: Performance Gap --
+    L1-RL Gaussian Student-t skew-normal skew-t   TPSC mixture (BIC)
+C1 0.0000   0.0017    0.0029      0.0079 0.0089 0.0088        0.0026
+C2 0.0476   0.0498    0.0582      0.0000 0.0018 0.0017        0.0286
+C3 0.1067   0.1894    0.0209      0.0716 0.0000 0.0000        0.0433
+C4 0.4496   0.4338    0.1804      0.0465 0.0013 0.0000        0.0380
+C5 0.4935   0.4737    0.4744      0.0078 0.0082 0.0061        0.0000
+C6 0.2368   0.3593    0.0000      0.3567 0.0180 0.0126        0.0014
+
+-- SELECTION: F1 vs the true signal set --
+   L1-RL Gaussian Student-t skew-normal skew-t  TPSC mixture (BIC)
+C1 0.655    0.785     0.743       0.694  0.672 0.672         0.765
+C2 0.655    0.700     0.604       0.691  0.670 0.659         0.550
+C3 0.682    0.541     0.757       0.591  0.810 0.805         0.573
+C4 0.032    0.198     0.521       0.664  0.695 0.690         0.537
+C5 0.025    0.148     0.146       0.944  0.944 0.952         0.992
+C6 0.565    0.199     0.676       0.324  0.578 0.581         0.528
+
+-- SELECTION: Performance Gap in F1 --
+   L1-RL Gaussian Student-t skew-normal skew-t  TPSC mixture (BIC)
+C1 0.129    0.000     0.041       0.090  0.112 0.113         0.019
+C2 0.045    0.000     0.096       0.009  0.030 0.041         0.150
+C3 0.128    0.270     0.053       0.219  0.000 0.005         0.237
+C4 0.664    0.498     0.175       0.032  0.000 0.006         0.159
+C5 0.967    0.844     0.846       0.048  0.048 0.040         0.000
+C6 0.111    0.476     0.000       0.352  0.098 0.095         0.148
+
+-- SELECTION: true positive rate --
+   L1-RL Gaussian Student-t skew-normal skew-t  TPSC mixture (BIC)
+C1 0.999    1.000     1.000       1.000  1.000 1.000         1.000
+C2 0.997    0.998     0.999       1.000  1.000 1.000         0.999
+C3 0.989    0.967     1.000       0.998  0.999 0.999         0.998
+C4 0.025    0.228     0.979       0.998  0.999 1.000         0.988
+C5 0.018    0.159     0.157       0.998  0.998 0.998         0.985
+C6 0.652    0.213     0.999       0.576  0.997 0.998         1.000
+
+-- SELECTION: false positive rate --
+   L1-RL Gaussian Student-t skew-normal skew-t  TPSC mixture (BIC)
+C1 0.272    0.148     0.185       0.234  0.259 0.259         0.164
+C2 0.272    0.223     0.340       0.237  0.261 0.275         0.418
+C3 0.237    0.407     0.170       0.350  0.126 0.131         0.380
+C4 0.024    0.230     0.456       0.260  0.232 0.238         0.431
+C5 0.018    0.159     0.159       0.030  0.030 0.026         0.000
+C6 0.153    0.144     0.256       0.488  0.379 0.375         0.458
+
+-- SELECTION: mean model size (true |I| = 20) --
+   L1-RL Gaussian Student-t skew-normal skew-t TPSC mixture (BIC)
+C1  41.7     31.8      34.8        38.7   40.7 40.7          33.1
+C2  41.7     37.8      47.2        38.9   40.9 42.0          53.4
+C3  38.7     51.9      33.6        47.9   30.1 30.5          50.3
+C4   2.4     22.9      56.0        40.8   38.5 39.0          54.2
+C5   1.8     15.9      15.8        22.4   22.4 22.0          19.7
+C6  25.3     15.8      40.5        50.6   50.3 50.0          56.6
+
+-- COST: median seconds per fit-and-predict cycle --
+   L1-RL Gaussian Student-t skew-normal skew-t  TPSC mixture (BIC)
+C1  2.27     1.31      7.40        5.56  77.49  9.79         87.36
+C2  0.49     0.69      7.88        7.38  76.94 10.70         84.50
+C3  0.47     0.66      9.09        8.45  35.65  7.72         78.37
+C4  0.34     0.53      7.76        7.81  34.73  7.73         84.34
+C5  0.33     0.50      6.48        8.11  73.36 11.50         52.30
+C6  0.36     0.51     10.78        7.50  42.14  7.72         61.93
+
+-- summary across the settings (the last rows of the manuscript table) --
+              worst_auc auc_max_perf_gap auc_mean_perf_gap worst_selF1
+L1-RL            0.5065           0.4935            0.2224      0.0254
+Gaussian         0.5263           0.4737            0.2513      0.1479
+Student-t        0.5256           0.4744            0.1228      0.1459
+skew-normal      0.5324           0.3567            0.0817      0.3239
+skew-t           0.8711           0.0180            0.0064      0.5779
+TPSC             0.8765           0.0126            0.0049      0.5807
+mixture (BIC)    0.8877           0.0433            0.0190      0.5280
+              selF1_max_perf_gap selF1_mean_perf_gap worst_tpr largest_fpr
+L1-RL                     0.9666              0.3406    0.0183      0.2720
+Gaussian                  0.8441              0.3480    0.1593      0.4068
+Student-t                 0.8461              0.2020    0.1568      0.4557
+skew-normal               0.3519              0.1250    0.5762      0.4885
+skew-t                    0.1122              0.0481    0.9973      0.3790
+TPSC                      0.1129              0.0500    0.9982      0.3755
+mixture (BIC)             0.2375              0.1190    0.9845      0.4582
+              med_sec
+L1-RL          0.4150
+Gaussian       0.5950
+Student-t      7.8200
+skew-normal    7.6550
+skew-t        57.7500
+TPSC           8.7625
+mixture (BIC) 81.3550
+
+==========================================================================
+MANUSCRIPT TABLE 6  [Sec6_discrete_raw.rds]  (n=800 p=100 |I|=20 reps=300, rows=7500, failures=0)
+
+-- CLASSIFICATION: AUC --
+    L1-RL Poisson negative binomial empirical pmf   TPSC
+D1 0.9840  0.9851            0.9847        0.9646 0.9825
+D2 0.8636  0.8644            0.8412        0.5916 0.7004
+D3 0.9887  0.9896            0.9895        0.9871 0.9869
+D4 0.5067  0.5236            0.5254        0.9982 0.5187
+D5 0.7789  0.7792            0.8358        0.9863 0.9799
+
+-- CLASSIFICATION: Performance Gap --
+    L1-RL Poisson negative binomial empirical pmf   TPSC
+D1 0.0010  0.0000            0.0004        0.0205 0.0026
+D2 0.0008  0.0000            0.0233        0.2728 0.1641
+D3 0.0009  0.0000            0.0001        0.0024 0.0027
+D4 0.4915  0.4746            0.4728        0.0000 0.4796
+D5 0.2074  0.2071            0.1505        0.0000 0.0064
+
+-- SELECTION: F1 vs the true signal set --
+   L1-RL Poisson negative binomial empirical pmf  TPSC
+D1 0.690   0.966             0.948         0.565 0.856
+D2 0.724   0.837             0.685         0.371 0.547
+D3 0.697   0.969             0.967         0.861 0.982
+D4 0.025   0.133             0.182         0.974 0.101
+D5 0.698   0.772             0.612         0.667 0.774
+
+-- SELECTION: Performance Gap in F1 --
+   L1-RL Poisson negative binomial empirical pmf  TPSC
+D1 0.275   0.000             0.018         0.400 0.109
+D2 0.113   0.000             0.152         0.466 0.289
+D3 0.285   0.013             0.015         0.121 0.000
+D4 0.949   0.841             0.792         0.000 0.873
+D5 0.076   0.002             0.162         0.107 0.000
+
+-- SELECTION: true positive rate --
+   L1-RL Poisson negative binomial empirical pmf  TPSC
+D1 1.000   0.999             0.999         0.997 0.999
+D2 0.997   0.996             0.992         0.969 0.932
+D3 0.999   1.000             1.000         0.998 0.999
+D4 0.018   0.119             0.203         0.989 0.143
+D5 0.951   0.924             0.982         0.995 0.999
+
+-- SELECTION: false positive rate --
+   L1-RL Poisson negative binomial empirical pmf  TPSC
+D1 0.234   0.019             0.030         0.391 0.090
+D2 0.199   0.102             0.236         0.813 0.373
+D3 0.228   0.017             0.018         0.087 0.010
+D4 0.019   0.109             0.184         0.011 0.150
+D5 0.201   0.123             0.311         0.254 0.153
+
+-- SELECTION: mean model size (true |I| = 20) --
+   L1-RL Poisson negative binomial empirical pmf TPSC
+D1  38.7    21.5              22.4          51.2 27.2
+D2  35.8    28.1              38.7          84.4 48.5
+D3  38.2    21.3              21.4          27.0 20.8
+D4   1.9    11.1              18.8          20.7 14.8
+D5  35.1    28.3              44.5          40.2 32.2
+
+-- COST: median seconds per fit-and-predict cycle --
+   L1-RL Poisson negative binomial empirical pmf  TPSC
+D1  0.86    0.83              0.90          0.61 13.50
+D2  0.56    0.63              0.86          0.67 16.33
+D3  0.74    0.73              0.80          0.64 14.44
+D4  0.42    0.58              0.67          0.50 15.11
+D5  0.48    0.59              0.94          0.53 11.33
+
+-- summary across the settings (the last rows of the manuscript table) --
+                  worst_auc auc_max_perf_gap auc_mean_perf_gap worst_selF1
+L1-RL                0.5067           0.4915            0.1403      0.0254
+Poisson              0.5236           0.4746            0.1363      0.1331
+negative binomial    0.5254           0.4728            0.1294      0.1817
+empirical pmf        0.5916           0.2728            0.0592      0.3713
+TPSC                 0.5187           0.4796            0.1311      0.1006
+                  selF1_max_perf_gap selF1_mean_perf_gap worst_tpr largest_fpr
+L1-RL                         0.9487              0.3396    0.0185      0.2337
+Poisson                       0.8410              0.1711    0.1192      0.1232
+negative binomial             0.7924              0.2279    0.2027      0.3110
+empirical pmf                 0.4655              0.2188    0.9688      0.8134
+TPSC                          0.8735              0.2544    0.1433      0.3734
+                  med_sec
+L1-RL                0.56
+Poisson              0.63
+negative binomial    0.86
+empirical pmf        0.61
+TPSC                14.44
+
+==========================================================================
+MANUSCRIPT TABLE 7  [Sec6_mixed_raw.rds]  (n=800 p=100 |I|=20 reps=300, rows=6000, failures=0)
+
+-- CLASSIFICATION: AUC --
+               L1-RL   TPSC binned adaptive
+E1 (rho=0)    0.9876 0.9946 0.9930   0.9951
+E2 (rho=0.25) 0.9795 0.9915 0.9914   0.9948
+E3 (rho=0.5)  0.9576 0.9826 0.9888   0.9947
+E4 (rho=0.75) 0.8934 0.9610 0.9843   0.9946
+E5 (rho=1)    0.8099 0.9310 0.9810   0.9945
+
+-- CLASSIFICATION: Performance Gap --
+               L1-RL   TPSC binned adaptive
+E1 (rho=0)    0.0075 0.0005 0.0021        0
+E2 (rho=0.25) 0.0153 0.0033 0.0034        0
+E3 (rho=0.5)  0.0371 0.0121 0.0059        0
+E4 (rho=0.75) 0.1012 0.0336 0.0103        0
+E5 (rho=1)    0.1846 0.0634 0.0134        0
+
+-- SELECTION: F1 vs the true signal set --
+              L1-RL  TPSC binned adaptive
+E1 (rho=0)    0.678 0.933  0.858    0.952
+E2 (rho=0.25) 0.650 0.849  0.851    0.933
+E3 (rho=0.5)  0.609 0.722  0.807    0.924
+E4 (rho=0.75) 0.554 0.607  0.766    0.919
+E5 (rho=1)    0.513 0.527  0.751    0.915
+
+-- SELECTION: Performance Gap in F1 --
+              L1-RL  TPSC binned adaptive
+E1 (rho=0)    0.274 0.019  0.093        0
+E2 (rho=0.25) 0.283 0.084  0.082        0
+E3 (rho=0.5)  0.315 0.202  0.117        0
+E4 (rho=0.75) 0.364 0.312  0.153        0
+E5 (rho=1)    0.401 0.388  0.163        0
+
+-- SELECTION: true positive rate --
+              L1-RL  TPSC binned adaptive
+E1 (rho=0)    0.913 0.993  0.991    0.994
+E2 (rho=0.25) 0.861 0.928  0.992    0.992
+E3 (rho=0.5)  0.754 0.836  0.994    0.990
+E4 (rho=0.75) 0.643 0.751  0.994    0.986
+E5 (rho=1)    0.564 0.692  0.995    0.985
+
+-- SELECTION: false positive rate --
+              L1-RL  TPSC binned adaptive
+E1 (rho=0)    0.204 0.036  0.086    0.025
+E2 (rho=0.25) 0.206 0.067  0.092    0.036
+E3 (rho=0.5)  0.188 0.126  0.128    0.041
+E4 (rho=0.75) 0.177 0.188  0.161    0.044
+E5 (rho=1)    0.166 0.241  0.175    0.045
+
+-- SELECTION: mean model size (true |I| = 20) --
+              L1-RL TPSC binned adaptive
+E1 (rho=0)     34.6 22.8   26.7     21.9
+E2 (rho=0.25)  33.7 23.9   27.2     22.7
+E3 (rho=0.5)   30.2 26.8   30.1     23.1
+E4 (rho=0.75)  27.0 30.1   32.8     23.2
+E5 (rho=1)     24.5 33.2   33.9     23.3
+
+-- COST: median seconds per fit-and-predict cycle --
+              L1-RL TPSC binned adaptive
+E1 (rho=0)     0.55 8.42   0.50     3.82
+E2 (rho=0.25)  0.72 8.62   0.50     3.81
+E3 (rho=0.5)   1.83 8.86   0.54     3.80
+E4 (rho=0.75)  0.53 9.28   0.58     3.80
+E5 (rho=1)     0.38 9.95   0.63     3.81
+
+-- summary across the settings (the last rows of the manuscript table) --
+         worst_auc auc_max_perf_gap auc_mean_perf_gap worst_selF1
+L1-RL       0.8099           0.1846            0.0691      0.5133
+TPSC        0.9310           0.0634            0.0226      0.5268
+binned      0.9810           0.0134            0.0070      0.7515
+adaptive    0.9945           0.0000            0.0000      0.9147
+         selF1_max_perf_gap selF1_mean_perf_gap worst_tpr largest_fpr med_sec
+L1-RL                0.4014              0.3274    0.5637      0.2060    0.55
+TPSC                 0.3879              0.2009    0.6922      0.2414    8.86
+binned               0.1632              0.1216    0.9912      0.1747    0.54
+adaptive             0.0000              0.0000    0.9848      0.0452    3.81
+
+==========================================================================
+MANUSCRIPT TABLE 4  transformation sampling variability, S-bar(m)
+   L1-RL Gaussian Student-t skew-normal skew-t  TPSC mixture (BIC)
+C1     0    0.167     0.169       0.195  0.204 0.199         0.172
+C2     0    0.187     0.203       0.209  0.212 0.205         0.277
+C3     0    0.904     0.247       0.795  0.260 0.251         0.590
+C4     0    0.342     0.199       0.866  0.380 0.328         0.452
+C5     0    0.081     0.082       0.652  0.730 0.373         0.345
+C6     0    0.974     0.207       1.598  0.546 0.336         0.360
+
+max_m S-bar(m)  (the first column of Table 4):
+        L1-RL     Student-t          TPSC mixture (BIC)        skew-t 
+        0.000         0.247         0.373         0.590         0.730 
+     Gaussian   skew-normal 
+        0.974         1.598 
+
+ave_m S-bar(m)  (the second column of Table 4):
+        L1-RL     Student-t          TPSC mixture (BIC)        skew-t 
+        0.000         0.184         0.282         0.366         0.388 
+     Gaussian   skew-normal 
+        0.443         0.719 
+
+==========================================================================
+SECTION 6.3 DIRECTIONAL TEST (mixed data)
+H: the advantage of the ADAPTIVE rule over each single-family variant
+   increases with rho, the fraction of the discrete block that is NOT a
+   one-parameter exponential family (i.e. unordered nominal), because for
+   Bernoulli/Poisson columns the LLR is affine in x and a continuous
+   plug-in therefore loses nothing.
+Paired per-replicate differences: every arm sees identical data and
+identical CV folds within a replicate.
+
+  adaptive - TPSC     (AUC)     E1 (rho=0)     +0.0005 (0.0001)   E2 (rho=0.25)  +0.0033 (0.0002)   E3 (rho=0.5)   +0.0121 (0.0003)   E4 (rho=0.75)  +0.0336 (0.0006)   E5 (rho=1)     +0.0634 (0.0010) 
+  adaptive - binned   (AUC)     E1 (rho=0)     +0.0021 (0.0001)   E2 (rho=0.25)  +0.0034 (0.0002)   E3 (rho=0.5)   +0.0059 (0.0002)   E4 (rho=0.75)  +0.0103 (0.0003)   E5 (rho=1)     +0.0134 (0.0004) 
+  adaptive - L1-RL    (AUC)     E1 (rho=0)     +0.0075 (0.0003)   E2 (rho=0.25)  +0.0153 (0.0004)   E3 (rho=0.5)   +0.0371 (0.0006)   E4 (rho=0.75)  +0.1012 (0.0012)   E5 (rho=1)     +0.1846 (0.0018) 
+  adaptive - TPSC     (sel F1)  E1 (rho=0)     +0.0187 (0.0029)   E2 (rho=0.25)  +0.0842 (0.0040)   E3 (rho=0.5)   +0.2021 (0.0049)   E4 (rho=0.75)  +0.3115 (0.0055)   E5 (rho=1)     +0.3879 (0.0052) 
+  adaptive - binned   (sel F1)  E1 (rho=0)     +0.0933 (0.0055)   E2 (rho=0.25)  +0.0825 (0.0057)   E3 (rho=0.5)   +0.1166 (0.0063)   E4 (rho=0.75)  +0.1525 (0.0065)   E5 (rho=1)     +0.1632 (0.0066) 
+
+  Reading: a positive and INCREASING sequence across E1-E5 supports the
+  hypothesis; a flat sequence would mean the mixed-data experiment is not
+  earning its place as a separate table.

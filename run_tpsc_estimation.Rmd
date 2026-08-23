@@ -1,0 +1,63 @@
+---
+title: "TPSC estimation experiments E1-E2 (supplement Appendix F)"
+output: html_document
+---
+
+Stage-1 only: how $\Psi = (\tau, w, \sigma, \delta)$ is estimated and how well the estimate behaves.
+
+These are the experiments reported in Appendix F of the supplement, "Numerical
+implementation details". The four parameter configurations S1-S4 used throughout
+are supplement Table F.1.
+
+| lab code | what it is | manuscript |
+|---|---|---|
+| **E1a** | three estimators M0-M2 on common random numbers | Table F.2 (M0 = *Ours*, M1 = *Greedy*, M2 = *Simplex*) |
+| **E1b** | sensitivity of the fit to the parameter box | Table F.3 |
+| **E2a** | finite-sample properties of the MLE; convergence rates | Table F.4 |
+| **E2b** | the delta-oracle contrast | Table F.5 |
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("R/00b_setup_lab.R")
+```
+
+## E1 - estimators and the parameter box
+
+```{r E1}
+E1 <- run_E1()
+knitr::kable(E1$E1a, digits = 3, caption =
+  "Table F.2 (per-configuration detail). Three estimators: M0 shipped = *Ours*,
+   M1 near-global LHS = *Greedy*, M2 Nelder-Mead = *Simplex*, on common random
+   numbers. The manuscript table averages these rows over S1-S4.")
+knitr::kable(E1$E1b, digits = 4, caption =
+  "Table F.3. Box sensitivity at the likelihood level (nll0, d_nll) and the
+   distribution level (kl0, d_kl0). Read each level's median and q95
+   separately: a box can leave the typical fit untouched while controlling the
+   tail (the w bounds), or move the median outright (the delta ceiling).")
+```
+
+## E2 - finite-sample properties of the TPSC MLE
+
+```{r E2}
+E2 <- run_E2()
+knitr::kable(E2$E2a, digits = 3, caption =
+  "Table F.4 (input). Parameter recovery + density-level divergence, per
+   (config, n); the log-log regressions below are fitted on these rows.")
+knitr::kable(E2$table1_parameter_rate, digits = 3, caption =
+  "Table F.4, parameter block. log(RMSE) on log(n) for (theta, w, sigma):
+   slope ~ -1/2 is the parametric rate.")
+knitr::kable(E2$table2_kl_rate, digits = 3, caption =
+  "Table F.4, divergence block. log(median KL) on log(n): slope ~ -1 is the
+   parametric rate.")
+knitr::kable(E2$E2b, digits = 4, caption =
+  "Table F.5 (per-n detail). Transform fidelity and the delta-oracle contrast. The benchmark
+   for kl_oracle_ratio is median(chisq_4)/median(chisq_3) = 1.4187, i.e. the
+   cost of one extra parameter.")
+knitr::kable(E2$table3_oracle, digits = 4, caption =
+  "Table F.5. One-point delta-oracle comparison at n = 1000. kl_oracle_ratio
+   is contrasted against the 1.4187 benchmark.")
+```
+
+```{r session}
+sessionInfo()
+```

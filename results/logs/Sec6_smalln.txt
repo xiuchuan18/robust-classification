@@ -1,0 +1,52 @@
+﻿Section 6.2 sample-size sweep [Sec6_smalln_raw.rds]: p=100 |I|=20 test_n=3000 reps=300 rows=8400 failures=0
+metrics available: auc, sel_f1, tpr, fpr 
+
+=== setting C3 : auc (rows = training sample size n) ===
+     L1-RL Gaussian Student-t skew-normal skew-t   TPSC mixture (BIC)
+80  0.7329   0.6091    0.7678      0.7381 0.7842 0.8450        0.6970
+150 0.8134   0.6549    0.8783      0.7818 0.9095 0.9249        0.8081
+300 0.8563   0.7327    0.9441      0.8629 0.9682 0.9696        0.8980
+800 0.8819   0.8152    0.9651      0.9218 0.9842 0.9843        0.9546
+
+=== setting C3 : sel_f1 (rows = training sample size n) ===
+     L1-RL Gaussian Student-t skew-normal skew-t   TPSC mixture (BIC)
+80  0.4129   0.3517    0.5286      0.3707 0.4811 0.5868        0.4333
+150 0.6202   0.4243    0.6654      0.5072 0.6991 0.7098        0.5428
+300 0.6833   0.4994    0.7417      0.5735 0.7876 0.7890        0.5836
+800 0.6730   0.5446    0.7585      0.5919 0.8064 0.8045        0.5674
+
+=== setting C3 : tpr (rows = training sample size n) ===
+     L1-RL Gaussian Student-t skew-normal skew-t   TPSC mixture (BIC)
+80  0.3875   0.4585    0.6008      0.4428 0.5010 0.6285        0.5445
+150 0.7227   0.6377    0.8658      0.7892 0.8620 0.8698        0.8305
+300 0.9345   0.8413    0.9853      0.9662 0.9807 0.9802        0.9703
+800 0.9983   0.9855    1.0000      0.9992 0.9997 1.0000        1.0000
+
+=== setting C3 : fpr (rows = training sample size n) ===
+     L1-RL Gaussian Student-t skew-normal skew-t   TPSC mixture (BIC)
+80  0.0900   0.2838    0.1697      0.2395 0.1437 0.1294        0.2433
+150 0.1523   0.3401    0.1870      0.3335 0.1537 0.1483        0.3105
+300 0.2094   0.3823    0.1743      0.3556 0.1332 0.1324        0.3431
+800 0.2510   0.4128    0.1725      0.3500 0.1313 0.1345        0.3897
+
+==========================================================================
+PAIRED DIFFERENCES, TPSC minus rival (positive = TPSC better); se in the
+adjacent column.
+
+-- auc --
+ mechanism   n vs_skewt se_skewt vs_mixture se_mixture vs_studentt se_studentt
+        C3  80 6.09e-02 1.85e-03     0.1481   0.002440      0.0772    0.002308
+        C3 150 1.54e-02 7.66e-04     0.1168   0.001581      0.0466    0.001437
+        C3 300 1.39e-03 2.07e-04     0.0716   0.000888      0.0255    0.000554
+        C3 800 5.58e-05 7.73e-05     0.0297   0.000440      0.0191    0.000220
+
+-- sel_f1 --
+ mechanism   n vs_skewt se_skewt vs_mixture se_mixture vs_studentt se_studentt
+        C3  80  0.10569  0.00437      0.153    0.00515      0.0582     0.00528
+        C3 150  0.01070  0.00248      0.167    0.00444      0.0445     0.00428
+        C3 300  0.00137  0.00250      0.205    0.00453      0.0472     0.00529
+        C3 800 -0.00190  0.00427      0.237    0.00681      0.0459     0.00817
+
+Reading: on setting C3 the skew-t model is CORRECTLY SPECIFIED, so any gap
+there is pure estimation variance, not misspecification. A gap that shrinks
+monotonically to zero as n grows is the signature of that variance.

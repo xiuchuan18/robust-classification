@@ -1,0 +1,106 @@
+---
+title: "Prostate variable-selection study + unique-gene figure (supplement Appendix E, Figures E.1-E.2)"
+output: html_document
+---
+
+Selection-frequency analysis on the prostate data.
+
+```{r setup, include=FALSE}
+source(here::here("R", "00_setup.R"))
+```
+
+```{r selection-frequency}
+spec <- load_prostate_raw()            # raw 6033 genes
+n_reps <- 500; train_ratio <- 0.7
+
+proj_root <- here::here()
+stopifnot(file.exists(file.path(proj_root, "R", "00_setup.R")))
+
+cl <- makeCluster(max(1, detectCores() - 1)); registerDoParallel(cl)
+cpp_exports <- c("d_tpsc_cpp", "tpsc_nll_cpp", "tpsc_transform_cpp",
+                 "tpsc_rowloglik_cpp")
+res <- foreach(r = seq_len(n_reps),
+               .packages = c("Rcpp","glmnet","MASS","randomForest","lightgbm"),
+               .noexport = cpp_exports,
+               .errorhandling = "pass") %dopar% {
+  source(file.path(proj_root, "R", "00_setup.R"))
+  set.seed(1012 + r)
+  idx <- sample(nrow(spec$X), floor(train_ratio * nrow(spec$X)))
+  sp  <- make_split(spec, idx)          # train-only MD screen to 200 genes
+  yq  <- as.numeric(as.character(sp$y_train))
+
+  f_s <- fit_srollr(sp$X_train, sp$y_train, nfolds = 3)
+  f_l <- cv.glmnet(sp$X_train, yq, family = "binomial", alpha = 1)
+  co  <- as.matrix(coef(f_l, s = "lambda.min"))
+
+  # RF and LightGBM feature-importance rankings.
+  yf     <- factor(as.character(sp$y_train), levels = c("0", "1"))
+  f_rf   <- randomForest(x = sp$X_train, y = yf, ntree = 200, importance = TRUE)
+  imp_rf <- randomForest::importance(f_rf, type = 1)    
+  rf_imp <- data.frame(Feature = rownames(imp_rf), Score = imp_rf[, 1],
+                       stringsAsFactors = FALSE)
+
+  dtrain   <- lgb.Dataset(data = sp$X_train, label = yq)
+  f_lg     <- lgb.train(list(objective = "binary", metric = "auc", verbose = -1),
+                        dtrain, nrounds = 100, verbose = -1)
+  lgbm_imp <- as.data.frame(lgb.importance(f_lg)) 
+
+  list(rep = r,
+       srollr   = srollr_selected(f_s),
+       l1rl     = setdiff(rownames(co)[co[, 1] != 0], "(Intercept)"),
+       rf_imp   = rf_imp,
+       lgbm_imp = lgbm_imp)
+}
+stopCluster(cl); registerDoSEQ()
+
+ok <- vapply(res, function(x) is.list(x) && !is.null(x[["srollr"]]), logical(1))
+if (!any(ok))
+  stop("All ", n_reps, " reps failed. First worker error:\n  ",
+       conditionMessage(res[[which(!ok)[1]]]))
+if (!all(ok))
+  message(sum(!ok), " of ", n_reps, " reps failed; keeping ", sum(ok), ".")
+sel <- res[ok]
+
+# selection frequencies
+freq <- function(field)
+  sort(table(unlist(lapply(sel, `[[`, field))), decreasing = TRUE)
+srollr_freq <- freq("srollr"); l1rl_freq <- freq("l1rl")
+head(srollr_freq, 15)
+
+# Average model size -> k_bar, rounded exactly as the previous version did.
+k_bar_srollr <- round(mean(vapply(sel, function(x) length(x$srollr), numeric(1))))  # ~7
+k_bar_l1rl   <- round(mean(vapply(sel, function(x) length(x$l1rl),   numeric(1))))  # ~10
+
+# Mean tree-ensemble importance across reps, then rank (as calc_avg_importance).
+agg_imp <- function(field, score_col) {
+  comb <- do.call(rbind, lapply(sel, function(x) {
+    d <- x[[field]]
+    data.frame(Feature = d$Feature, Score = d[[score_col]], stringsAsFactors = FALSE)
+  }))
+  a <- aggregate(Score ~ Feature, data = comb, FUN = mean)
+  a[order(a$Score, decreasing = TRUE), ]
+}
+rf_avg   <- agg_imp("rf_imp",   "Score")
+lgbm_avg <- agg_imp("lgbm_imp", "Gain")
+
+# Top-k_bar consensus sets.
+top_srollr <- names(srollr_freq)[seq_len(min(k_bar_srollr, length(srollr_freq)))]
+top_l1rl   <- names(l1rl_freq)[seq_len(min(k_bar_l1rl,   length(l1rl_freq)))]
+top_rf     <- rf_avg$Feature[seq_len(min(k_bar_l1rl, nrow(rf_avg)))]
+top_lgbm   <- lgbm_avg$Feature[seq_len(min(k_bar_l1rl, nrow(lgbm_avg)))]
+
+# The highlighted gene: one S-RoLLR selects frequently but L1-RL, RF and LightGBM all overlook.
+unique_gene <- setdiff(top_srollr, c(top_l1rl, top_rf, top_lgbm))[1]
+if (is.na(unique_gene))
+  stop("No S-RoLLR-unique gene found among the top ", k_bar_srollr,
+       "; nothing to highlight.")
+cat("Highlighted gene:", unique_gene,
+    " S-RoLLR count:", srollr_freq[[unique_gene]],
+    " L1-RL count:", if (unique_gene %in% names(l1rl_freq)) l1rl_freq[[unique_gene]] else 0,
+    "\n")
+saveRDS(list(srollr_freq = srollr_freq, l1rl_freq = l1rl_freq,
+             rf_avg = rf_avg, lgbm_avg = lgbm_avg,
+             k_bar = list(srollr = k_bar_srollr, l1rl = k_bar_l1rl),
+             unique_gene = unique_gene),
+        here::here("results", "variable_selection_freq.rds"))
+```

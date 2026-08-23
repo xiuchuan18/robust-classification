@@ -1,0 +1,29 @@
+# --- R session state -----------------------------------------------------
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+.Rproj.user/
+
+# --- compiled Rcpp artefacts (tpsc.cpp is recompiled on every boot) ------
+*.o
+*.so
+*.dll
+src/*.rds
+
+# --- data fetched at run time, not redistributed -------------------------
+data/HTRU_2.csv
+
+# --- run-time outputs that are regenerated, not archived -----------------
+results/real_data_results.rds
+results/smoke*.rds
+smoke*.rds
+*_files/
+*.html
+!docs/run_simulation.html
+
+# --- editor / OS ---------------------------------------------------------
+.DS_Store
+Thumbs.db
+~$*
+.vscode/

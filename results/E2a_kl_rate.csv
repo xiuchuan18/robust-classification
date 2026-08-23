@@ -1,0 +1,5 @@
+"config","kl_slope","kl_r2","theory_slope","n_grid","n_min","n_max"
+"S1 near-Gaussian symmetric",-1.2458161473,0.964206323213427,-1,8,10,1000
+"S2 symmetric heavy tail",-1.28469585061164,0.972307148765877,-1,8,10,1000
+"S3 skewed moderate tail",-1.24468991214246,0.989065651676385,-1,8,10,1000
+"S4 skewed Cauchy tail",-1.15814986120168,0.994019732311943,-1,8,10,1000
