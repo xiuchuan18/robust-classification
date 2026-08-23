@@ -1,26 +1,7 @@
-# run_extension_smalln.R ------------------------------------------------------
-# Appendix G.2, the sample-size sweep: the STATISTICAL cost of stage-1
-# flexibility.  Saves results/Sec6_smalln_raw.rds; report it with
+# run_extension_smalln.R
+# Appendix G.2, the sample-size sweep: the Statistical cost of stage-1 flexibility. Saves results/Sec6_smalln_raw.rds, and report it with
 # analyze_extension_smalln.R.
-#
-# Table G.4 shows that TPSC, skew-t and the BIC mixture are indistinguishable in
-# accuracy at n = 800, so the choice among them rests on cost.  Table G.4's timing
-# row measures the computational cost; this sweep measures the statistical one:
-# how well each working density can be estimated when stage 1 sees few
-# observations per class.  It produces the paragraph in Appendix G.2 that quotes
-# the paired AUC difference 0.061 (0.002) at n = 80 falling to 5.6e-5 (7.7e-5)
-# at n = 800.
-#
-# Two deliberate design differences from the main run (run_extension.R):
-#   * the sweep runs on setting C3, which is skew-t's OWN correctly specified
-#     mechanism.  That is what makes it decisive: if skew-t loses to TPSC on the
-#     mechanism it is correctly specified for, the loss can only be estimation
-#     variance, not misspecification.  (Set MECHS to add "C6: Contam", where no
-#     family is correct, as a cross-check; only C3 is reported in Section 6.)
-#   * the test set is a FRESH sample of size TEST_N drawn from the same
-#     mechanism, rather than a 30% holdout.  At n = 80 a holdout would contain
-#     24 points and the AUC noise would swamp the effect being measured.
-#
+
 # Seed contract as in R/13_ext_harness.R: one job = one (setting, n, replicate);
 # the seed drives generation and fold assignment, and all arms then see
 # identical training data and identical folds.
