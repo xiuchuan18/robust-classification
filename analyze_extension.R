@@ -113,7 +113,7 @@ if (!is.null(e1)) {
   print(round(sort(apply(TS, 2, mean)), 3))
 }
 
-## --- Table G.6 follow-up: the directional test -------------------------------
+## Table G.6 follow-up: the directional test
 if (!is.null(e3)) {
   use_experiment("exp3")
   cat("\n", strrep("=", 74), "\n", sep = "")
@@ -146,7 +146,4 @@ if (!is.null(e3)) {
     cat(paste(sprintf("%-14s %+.4f (%.4f)", paper_mech(o$mechanism), o$d, o$se),
               collapse = "   "), "\n")
   }
-  cat("\n  Reading: a positive and INCREASING sequence across E1-E5 supports the\n")
-  cat("  hypothesis; a flat sequence would mean the mixed-data experiment is not\n")
-  cat("  earning its place as a separate table.\n")
 }
