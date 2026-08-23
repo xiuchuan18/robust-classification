@@ -1,26 +1,14 @@
-# analyze_extension.R ---------------------------------------------------------
-# Report for Section 6 of the main article, whose tables live in Appendix G of
-# the supplement: turns the three raw result objects written by run_extension.R
+# analyze_extension.R
+# Report for Section 6 of the main article, whose tables live in Appendix G of the supplement: turns the three raw result objects written by run_extension.R
 # into the manuscript's tables.
 #
-#   results/Sec6_continuous_raw.rds -> Table G.4 (AUC, selection F1, Maximum
-#                                      Performance Gap, median time) and
-#                                      Table G.3 (transformation sampling
-#                                      variability of the three competitive
-#                                      variants)
+#   results/Sec6_continuous_raw.rds -> Table G.4 (AUC, selection F1, Maximum Performance Gap, median time) and
+#                                      Table G.3 (transformation sampling variability of the three competitive variants)
 #   results/Sec6_discrete_raw.rds   -> Table G.5
-#   results/Sec6_mixed_raw.rds      -> Table G.6, plus the directional test
-#                                      behind the "gain rises monotonically with
-#                                      rho" claim of Appendix G.3
+#   results/Sec6_mixed_raw.rds      -> Table G.6, plus the directional test behind the "gain rises monotonically with rho" claim of Appendix G.3
 #
-# Every printed table uses the manuscript's setting labels (C1-C6, D1-D5,
-# E1-E5) and the manuscript's variant names; the code ids stored in the raw
+# Every printed table uses the manuscript's setting labels (C1-C6, D1-D5, E1-E5) and the manuscript's variant names, and the code ids stored in the raw
 # files are mapped by paper_mech() / paper_arm() in R/14_ext_experiments.R.
-#
-# Reviewer 1's third comment asks for variable-selection accuracy and computing
-# time alongside classification, so every selection metric that is recorded is
-# also reported, and selection gets its own Performance-Gap treatment rather
-# than only an AUC one.
 #
 # Usage (from the project root):
 #       Rscript analyze_extension.R
