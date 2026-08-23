@@ -1,5 +1,5 @@
-# run_extension.R -------------------------------------------------------------
-# Section 6 ("Extension of S-RoLLR"): runs ONE of the three extension
+# run_extension.R
+# Section 6 ("Extension of S-RoLLR"): runs one of the three extension
 # experiments and saves its raw per-(setting, arm, replicate) table.
 #
 #   EXP = "exp1"   continuous settings C1-C6, seven working densities
@@ -23,13 +23,6 @@
 #
 #   RStudio console:
 #       Sys.setenv(EXP = "exp1"); source("run_extension.R")
-#
-# Every setting is overridable through an environment variable, so a quick smoke
-# test is  N_REPS=2 PP=20 PREL=4 OUT=smoke.rds Rscript run_extension.R.
-#
-# Cost on 14 cores: exp1 ~ 5.7 h, exp2 ~ 32 min, exp3 ~ 36 min at 300 replicates
-# (see results/logs/).  The three runs are independent and may be run in any
-# order or on different machines.
 
 PROJ <- normalizePath(Sys.getenv("EXT_WD", getwd()), winslash = "/")
 source(file.path(PROJ, "R", "00c_setup_ext.R")); ext_boot(PROJ)
